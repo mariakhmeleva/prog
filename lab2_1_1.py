@@ -11,30 +11,30 @@
 # except ValueError:
 #     print('Вы ввели не число')
 #1/2
-# numbers = []
-# for _ in range(3):
-#     user_input = input('Введите число: ')
-#     try:
-#         number = int(user_input)
-#     except ValueError:
-#         print('Вы ввели не число')
-#         number = None 
-#     numbers.append(number)
+numbers = []
+for _ in range(3):
+    user_input = input('Введите число: ')
+    try:
+        number = int(user_input)
+    except ValueError:
+        print('Вы ввели не число')
+        number = None 
+    numbers.append(number)
 
-# filtered_numbers = []
-# for num in numbers:
-#     if num is not None and 1 <= num < 50:
-#         filtered_numbers.append(num)
+filtered_numbers = []
+for num in numbers:
+    if num is not None and 1 <= num < 50:
+        filtered_numbers.append(num)
 
-# print('Ваши числа входящие в промежуток 1-50:', filtered_numbers)
+print('Ваши числа входящие в промежуток 1-50:', filtered_numbers)
 
 #1/3
-# try:
-#     number = float(input('Введите число: '))
-#     for i in range(1, 11):
-#         print(f'{number} * {i} = {number * i}')
-# except ValueError:
-#     print('Ошибка: вы ввели не число')
+try:
+    number = float(input('Введите число: '))
+    for i in range(1, 11):
+        print(f'{number} * {i} = {number * i}')
+except ValueError:
+    print('Ошибка: вы ввели не число')
 
 #1/4
 print("Вводите числа по одному. Для завершения введите пустую строку:")
@@ -63,4 +63,3 @@ if count == 0:
 else:
     print(f"Сумма чисел: {total_sum}")
     print(f"Количество чисел: {count}")
-    print(f"Среднее значение: {total_sum / count:.2f}")  # Добавлено вычисление среднего
