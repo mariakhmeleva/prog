@@ -29,7 +29,6 @@ for num in arr:
     if num % 2 == 0 and num < 10:
         small_evens.append(num)
 
-# Сортировка пузырьком (без использования встроенной sort)
 n = len(small_evens)
 for i in range(n):
     for j in range(0, n-i-1):

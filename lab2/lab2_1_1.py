@@ -1,15 +1,15 @@
 #1/1
-# x = input('Введите число: ')
-# y = input('Введите число: ')
-# z = input('Введите число: ')
+x = input('Введите число: ')
+y = input('Введите число: ')
+z = input('Введите число: ')
 
-# try:
-#     x = int(x)
-#     y = int(y)
-#     z = int(z)
-#     print('Минимальное число:', min(x, y, z))
-# except ValueError:
-#     print('Вы ввели не число')
+try:
+    x = int(x)
+    y = int(y)
+    z = int(z)
+    print('Минимальное число:', min(x, y, z))
+except ValueError:
+    print('Вы ввели не число')
 #1/2
 numbers = []
 for _ in range(3):
