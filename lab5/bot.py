@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 import os
 from dotenv import load_dotenv
-# === Настройки ===
+
 load_dotenv()
 API_TOKEN = os.getenv("API_TOKEN")  
 
@@ -15,19 +15,18 @@ API_TOKEN = os.getenv("API_TOKEN")
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
-# === Клавиатура ===
 main_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
     [KeyboardButton(text="/convert")],
     [KeyboardButton(text="/get_currencies")],
     [KeyboardButton(text="/manage_currency")],
 ])
 
-# === Команда /start ===
+
 @dp.message(F.text == "/start")
 async def start_cmd(msg: Message):
     await msg.answer("Привет! Выберите действие из меню:", reply_markup=main_menu)
 
-# === Команда /get_currencies ===
+
 @dp.message(F.text == "/get_currencies")
 async def get_currencies(msg: Message):
     res = requests.get("http://localhost:5002/currencies")
@@ -41,7 +40,7 @@ async def get_currencies(msg: Message):
     text = "\n".join([f"{c['currency_name']}: {c['rate']}₽" for c in currencies])
     await msg.answer(text)
 
-# === FSM для /convert ===
+# Для convert
 class ConvertState(StatesGroup):
     waiting_currency = State()
     waiting_amount = State()
@@ -74,7 +73,7 @@ async def convert_amount(msg: Message, state: FSMContext):
         await msg.answer(f"{amount} {currency} = {converted:.2f}₽")
     await state.clear()
 
-# === FSM для управления валютами (admin only) ===
+
 class ManageCurrencyState(StatesGroup):
     action = State()
     currency = State()
@@ -82,6 +81,11 @@ class ManageCurrencyState(StatesGroup):
 
 @dp.message(F.text == "/manage_currency")
 async def manage_currency_start(msg: Message, state: FSMContext):
+    res = requests.get(f"http://localhost:5001/get_role/{msg.from_user.id}")
+    if res.status_code != 200 or res.json().get("role") != "admin":
+        await msg.answer("У вас нет доступа к этой команде.")
+        return
+
     kb = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
         [KeyboardButton(text="Добавить валюту")],
         [KeyboardButton(text="Удалить валюту")],

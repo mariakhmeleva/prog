@@ -5,8 +5,6 @@ app = Flask(__name__)
 conn = psycopg2.connect(database="currency_db", user="postgres", password="postgres", host="localhost", port="5432")
 cur = conn.cursor()
 
-# Создание таблицы при первом запуске
-
 
 @app.route('/load', methods=['POST'])
 def load_currency():
@@ -40,6 +38,32 @@ def delete_currency():
     cur.execute("DELETE FROM currencies WHERE currency_name=%s", (name,))
     conn.commit()
     return jsonify({"status": "OK"}), 200
+
+
+@app.route('/set_role', methods=['POST'])
+def set_role():
+    data = request.json
+    telegram_id = data['telegram_id']
+    role = data['role']
+    if role not in ['admin', 'user']:
+        return jsonify({"error": "Invalid role"}), 400
+    cur.execute("SELECT * FROM users WHERE telegram_id=%s", (telegram_id,))
+    if cur.fetchone():
+        cur.execute("UPDATE users SET role=%s WHERE telegram_id=%s", (role, telegram_id))
+    else:
+        cur.execute("INSERT INTO users (telegram_id, role) VALUES (%s, %s)", (telegram_id, role))
+    conn.commit()
+    return jsonify({"status": "role updated"}), 200
+
+# Получить роль
+@app.route('/get_role/<int:telegram_id>', methods=['GET'])
+def get_role(telegram_id):
+    cur.execute("SELECT role FROM users WHERE telegram_id=%s", (telegram_id,))
+    row = cur.fetchone()
+    if row:
+        return jsonify({"role": row[0]}), 200
+    return jsonify({"role": "user"}), 200 
+
 
 if __name__ == '__main__':
     app.run(port=5001)
