@@ -12,7 +12,7 @@ def convert():
     cur.execute("SELECT rate FROM currencies WHERE currency_name=%s", (currency,))
     row = cur.fetchone()
     if not row:
-        return jsonify({"error": "Currency not found"}), 404
+        return jsonify({"error": "Валюта не найдена"}), 404
     rub_amount = amount * float(row[0])
     return jsonify({"converted": rub_amount}), 200
 

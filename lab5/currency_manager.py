@@ -12,7 +12,7 @@ def load_currency():
     name, rate = data['currency_name'], data['rate']
     cur.execute("SELECT * FROM currencies WHERE currency_name=%s", (name,))
     if cur.fetchone():
-        return jsonify({"error": "Currency already exists"}), 400
+        return jsonify({"error": "Данная валюта уже существует"}), 400
     cur.execute("INSERT INTO currencies (currency_name, rate) VALUES (%s, %s)", (name, rate))
     conn.commit()
     return jsonify({"status": "OK"}), 200
@@ -23,7 +23,7 @@ def update_currency():
     name, rate = data['currency_name'], data['rate']
     cur.execute("SELECT * FROM currencies WHERE currency_name=%s", (name,))
     if not cur.fetchone():
-        return jsonify({"error": "Currency not found"}), 404
+        return jsonify({"error": "Валюта не найдена"}), 404
     cur.execute("UPDATE currencies SET rate=%s WHERE currency_name=%s", (rate, name))
     conn.commit()
     return jsonify({"status": "OK"}), 200
@@ -34,7 +34,7 @@ def delete_currency():
     name = data['currency_name']
     cur.execute("SELECT * FROM currencies WHERE currency_name=%s", (name,))
     if not cur.fetchone():
-        return jsonify({"error": "Currency not found"}), 404
+        return jsonify({"error": "Валюта не найдена"}), 404
     cur.execute("DELETE FROM currencies WHERE currency_name=%s", (name,))
     conn.commit()
     return jsonify({"status": "OK"}), 200
